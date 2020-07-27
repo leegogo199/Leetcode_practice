@@ -1,0 +1,55 @@
+# 给定一个包括 n 个整数的数组 nums 和 一个目标值 target。找出 nums 中的三个整数，
+# 使得它们的和与 target 最接近。返回这三个数的和。假定每组输入只存在唯一答案。
+
+# 示例：
+
+# 输入：nums = [-1,2,1,-4], target = 1
+# 输出：2
+# 解释：与 target 最接近的和是 2 (-1 + 2 + 1 = 2) 。
+
+# 提示：
+
+  #  3 <= nums.length <= 10^3
+   # -10^3 <= nums[i] <= 10^3
+    #-10^4 <= target <= 10^4
+
+# 来源：力扣（LeetCode）
+# 链接：https://leetcode-cn.com/problems/3sum-closest
+# 著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+#solution
+# 本来打算使用类似于两个数和的hashmap，后来发现别人这道题要的是最接近的
+# 不一定有刚好相等的，所以，打算使用双指针法解决。
+class Solution:
+    def threeSumClosest(self, nums: List[int], target: int) -> int:
+    # 首先是两种特殊情况的处理
+        if not nums:
+          return 0
+        if len(nums) < 3: 
+          return sum(nums)
+        nums.sort()
+        # 这个地方翻车了好几次，尝试过最大值的三倍，但不行，还是直接设置一个极大值比较好。
+        ans = float('inf')
+      
+        for i in range(len(nums)):
+            # 
+            if i > 0 and nums[i] == nums[i-1]: 
+              continue
+            
+            # 新的 t
+            t = target - nums[i]
+            j, k = i + 1, len(nums) - 1
+            while j < k:
+                # 优化点 2
+                if t == nums[j] + nums[k]: 
+                    return target
+
+                # 当前 j、k更接近target
+                if abs(t - nums[j] - nums[k]) < abs(target - ans):
+                    ans = nums[i] + nums[j] + nums[k]
+                # 如果选中的两个数值比k大，因为，数组是升序排列的，那么我们就左移右指针也就是k，减小两者的加和，反之亦然。
+                if t > nums[j] + nums[k]:
+                    j += 1
+                else:
+                    k -= 1
+        return ans
