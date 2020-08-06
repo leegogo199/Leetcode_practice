@@ -1,0 +1,55 @@
+给你两个二进制字符串，返回它们的和（用二进制表示）。
+
+输入为 非空 字符串且只包含数字 1 和 0。
+
+示例 1:
+
+输入: a = "11", b = "1"
+
+输出: "100"
+
+
+示例 2:
+
+
+输入: a = "1010", b = "1011"
+
+输出: "10101"
+
+提示：
+
+每个字符串仅由字符 '0' 或 '1' 组成。
+
+1 <= a.length, b.length <= 10^4
+
+字符串如果不是 "0" ，就都不含前导零。
+
+来源：力扣（LeetCode）
+
+链接：力扣
+
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+# 答案解答
+
+class Solution:
+def addBinary(self, a: str, b: str) -> str:
+while len(a)<len(b):
+a = "0"+a
+while len(a)>len(b):
+b = "0"+b
+lens = len(a) #当前字符的长度
+carry = 0 ##记录是否有进位
+res = [] ##记录每次计算的结果
+for i in range(lens-1,-1,-1): ##从最后一位开始进行计算
+sums = int(a[i])+int(b[i])+carry ##二进制转成十进制
+if sums >=2: ##说明有进位
+curr_res = str(sums-2)
+res.insert(0,curr_res)
+carry = 1
+else:
+res.insert(0,str(sums))
+carry = 0
+if carry:
+res.insert(0,"1")
+# print(res)
+return "".join(res)
