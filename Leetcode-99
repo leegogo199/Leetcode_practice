@@ -1,0 +1,117 @@
+二叉搜索树中的两个节点被错误地交换。
+
+
+请在不改变其结构的情况下，恢复这棵树。
+
+
+示例 1:
+
+
+输入: [1,3,null,null,2]
+
+
+1
+
+/
+
+3
+
+\
+
+2
+
+
+输出: [3,1,null,null,2]
+
+
+3
+
+/
+
+1
+
+\
+
+2
+
+
+示例 2:
+
+
+输入: [3,1,4,null,null,2]
+
+
+3
+
+/ \
+
+1 4
+
+/
+
+2
+
+
+输出: [2,1,4,null,null,3]
+
+
+2
+
+/ \
+
+1 4
+
+/
+
+3
+
+
+进阶:
+
+
+使用 O(n) 空间复杂度的解法很容易实现。
+
+你能想出一个只使用常数空间的解决方案吗？
+
+
+来源：力扣（LeetCode）
+
+链接：力扣
+
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+# Definition for a binary tree node.
+# class TreeNode:
+# def __init__(self, val=0, left=None, right=None):
+# self.val = val
+# self.left = left
+# self.right = right
+class Solution:
+def recoverTree(self, root: TreeNode) -> None:
+"""
+思路: 中序遍历, 找到prev比后面node值大的节点
+"""
+stack = []
+curr = root
+prev_node = None
+# 前面节点值比后面node值大的节点
+handle_gt_node = None
+# 要处理的node
+handle_node = None
+
+while curr or len(stack):
+if curr is not None:
+stack.append(curr)
+curr = curr.left
+else:
+node = stack.pop()
+if prev_node and prev_node.val > node.val:
+# 如果prev_node的值比后面的值大 记录一下handle_gt_node, handle_node
+if handle_gt_node is None:
+handle_gt_node = prev_node
+handle_node = node
+
+prev_node = node
+curr = node.right
+# 交换位置
+handle_gt_node.val, handle_node.val = handle_node.val, handle_gt_node.val
