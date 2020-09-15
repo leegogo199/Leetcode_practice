@@ -1,0 +1,93 @@
+编写一个程序，通过已填充的空格来解决数独问题。
+
+一个数独的解法需遵循如下规则：
+
+数字 1-9 在每一行只能出现一次。
+
+数字 1-9 在每一列只能出现一次。
+
+数字 1-9 在每一个以粗实线分隔的 3x3 宫内只能出现一次。
+
+空白格用 '.' 表示。
+
+一个数独。
+
+答案被标成红色。
+
+Note:
+
+给定的数独序列只包含数字 1-9 和字符 '.' 。
+
+你可以假设给定的数独只有唯一解。
+
+给定数独永远是 9x9 形式的。
+
+来源：力扣（LeetCode）
+
+链接：力扣
+
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+solution
+
+题主采用的是一个朴素的方法解决的该问题。
+
+1第一步，先把确定答案的填上，比如某一行，已经有了八个数字，剩下的那个空，也就唯一确定了
+
+2第二步，回溯法猜测填空。
+
+NUM = [str(x) for x in range(1, 10)]
+class Solutionll
+def solveSudoku(self, in_board: list) -> None:
+self.fill_the_singlesolu_hole(in_board)
+# 新建可用列表
+avaliable_row = [set(str(x) for x in range(1, 10)) for _ in range(9)]
+avaliable_col = [set(str(x) for x in range(1, 10)) for _ in range(9)]
+avaliable_cube = [set(str(x) for x in range(1, 10)) for _ in range(9)]
+empty_hole = [(i, j) for i in range(9) for j in range(9) if in_board[i][j] == '.'] # local to file
+for i in range(9): # 更新可用列表
+for j in range(9):
+if in_board[i][j] != '.':
+avaliable_row[i].remove(in_board[i][j])
+avaliable_col[j].remove(in_board[i][j])
+avaliable_cube[(i//3)*3+j//3].remove(in_board[i][j])
+def getback(times): # 填充次数等于空值长度就是整完了，返回
+if times == len(empty_hole):
+return True
+i, j = empty_hole[times]
+for to_fill in avaliable_row[i] & avaliable_col[j] & avaliable_cube[(i//3)*3+j//3]:
+avaliable_row[i].remove(to_fill)
+avaliable_col[j].remove(to_fill)
+avaliable_cube[(i//3)*3+j//3].remove(to_fill)
+in_board[i][j] = to_fill
+if getback(times+1):
+return True
+# 回溯
+avaliable_row[i].add(to_file)
+avaliable_col[j].add(to_file)
+avaliable_cube[(i//3)*3+j//3].add(to_file)
+return False
+getback(0)
+
+# 填满所有不用测试的空
+def fill_the_singlesolu_hole(self, in_board: list):
+temp = 81
+while True:
+num_of_black = 0
+for i in range(len(in_board)):
+for j in range(len(in_board[0])):
+if in_board[i][j] == '.':
+solut = self.get_solu(i, j, in_board)
+if len(solut) == 1:
+in_board[i][j] = solut[0]
+else: num_of_black += 1
+if num_of_black < temp: temp = num_of_black
+else: break
+return True
+
+# 得到一个可能的解
+def get_solu(self, i, j, in_board):
+row = [x for x in in_board[i] if x != '.']
+clo = [x for x in list(zip(*in_board))[j] if x != '.']
+cube = [in_board[3*(i//3)+m][3*(j//3)+n] for m in range(3) for n in range(3)
+if in_board[3*(i//3)+m][3*(j//3)+n] != '.']
+return [x for x in NUM if x not in (*row, *clo, *cube)]
